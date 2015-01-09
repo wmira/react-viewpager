@@ -1,0 +1,35 @@
+{
+  "name": "react-viewpager",
+  "version": "0.0.1",
+  "description": "View Pager",
+  "main": "js/react-viewpager.js",
+  "scripts": {
+    "build": "webpack src/viewpager.js js/react-viewpager.js",
+    "build-min": "NODE_ENV=production COMPRESS=1 webpack src/viewpager.js js/react-viewpager.min.js",
+    "watch": "webpack src/viewpager.js js/react-viewpager.js --watch"
+  },
+  "author": "Warren Mira <warrenmira@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "6to5": "^2.9.3",
+    "6to5-loader": "^2.0.0",
+    "jsx-loader": "^0.12.2",
+    "react": "^0.12.2",
+    "webpack": "^1.4.15"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wmira/react-viewpager"
+  },
+  "bugs": {
+    "url": "https://github.com/wmira/react-viewpager/issues"
+  },
+  "homepage": "https://github.com/wmira/react-viewpager",
+
+  "keywords" : [
+    "react",
+    "react-component",
+    "view pager",
+    "view switcher"
+  ]
+}

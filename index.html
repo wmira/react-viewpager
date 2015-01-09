@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="http://fb.me/react-0.12.2.js"></script>
+    <script src="js/react-viewpager.js"></script>
+
+</head>
+<body>
+
+    <div id="viewpager-container">
+
+    </div>
+    <div id="viewpager-container2">
+
+    </div>
+</body>
+<script language="javascript">
+
+    var pager = React.render(React.createElement(ViewPager,{ views : ["page1","page2","page3"], visible:"page1"}),
+            document.getElementById("viewpager-container"));
+
+
+    pager.el('page2').innerHTML = "PAGE 2";
+    pager.show('page2');
+
+    var pager2 = React.render(React.createElement(ViewPager,{ views : ["page11","page22","page33"], visible:"page11"}),
+            document.getElementById("viewpager-container2"));
+
+
+    pager2.el('page22').innerHTML = "PAGE 22";
+    pager2.show('page22');
+
+
+</script>
+</html>
