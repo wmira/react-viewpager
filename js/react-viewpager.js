@@ -59,6 +59,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/* jshint -W097 */
 	"use strict";
 
+	var renderWrapper = __webpack_require__(2);
 	var React = __webpack_require__(1);
 
 	var View = React.createClass({displayName: "View",
@@ -82,10 +83,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	        return (React.createElement("div", {"data-vp-name": this.state.view.name, style: divStyle}, 
 	            React.createElement("div", {ref: "el"})
 	        ))
-	    },
+	    }
 
 
 	});
+
 
 	var ViewPager = React.createClass({displayName: "ViewPager",
 
@@ -129,13 +131,78 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	});
 
-	module.exports = ViewPager;
+
+	module.exports = renderWrapper(ViewPager);
 
 /***/ },
 /* 1 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = __WEBPACK_EXTERNAL_MODULE_1__;
+
+/***/ },
+/* 2 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/*globals require,module */
+	"use strict";
+
+	var React = __webpack_require__(1);
+
+	/**
+	 * React instance creation is a bit noisy. Use this on react a library such
+	 * that its more direct to the point when creating new instance. E.g.
+	 *
+	   React.render(React.createElement(ViewPager,{ views : ["page11","page22","page33"], visible:"page11"}),
+	            document.getElementById("viewpager-container2"));
+	 * 
+	 * to something like
+	 *
+	 * ViewPager.render({ views : ["page1","page2","page3"], visible:"page1"},"viewpager-container");
+	 * or
+	 * ViewPager.render("viewpager-container");
+	 * 
+	 * If your are exposing a library then :
+	 * 
+	 * var renderWrapper = require("react-render");
+	 * var MyReactComponent = React.createClass... 
+	 * 
+	 * module.exports = renderWrapper(MyReactComponent)
+	 *
+	 */
+
+	    
+	var render = function(ReactClass,options,el) {
+	    
+	    var ouroption = {};
+	    //if he passed an html element or a string on the first argument
+	    //then we assume he wants no options
+	    var ourEl = null;
+	    
+	    //check if its actually an element
+	    if ( ( options.tagName && options.nodeName && (typeof options.nodeType === 'number') ) 
+	        || ( typeof options === 'string' ) ) {
+	        ourEl = options;
+	    } else {
+	        ouroption = options;
+	        ourEl = ( typeof el === 'string') ? document.getElementById(el) : el;
+	    }
+
+	    return React.render(React.createElement(ReactClass,ouroption), ourEl);
+	};
+
+	var RenderWrapper = function(ReactClass) {
+
+	    return {
+	        cls : ReactClass,
+	        render : function(options,el) {
+	            return render(ReactClass,options,el)
+	        }
+	    }
+
+	};
+
+	module.exports = RenderWrapper;
 
 /***/ }
 /******/ ])

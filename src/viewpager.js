@@ -3,6 +3,7 @@
 /* jshint -W097 */
 "use strict";
 
+var renderWrapper = require("react-render-wrapper");
 var React = require("react");
 
 var View = React.createClass({
@@ -26,10 +27,11 @@ var View = React.createClass({
         return (<div data-vp-name={this.state.view.name} style={divStyle}>
             <div ref={"el"}></div>
         </div>)
-    },
+    }
 
 
 });
+
 
 var ViewPager = React.createClass({
 
@@ -73,4 +75,5 @@ var ViewPager = React.createClass({
     }
 });
 
-module.exports = ViewPager;
+
+module.exports = renderWrapper(ViewPager);

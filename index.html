@@ -16,14 +16,13 @@
 </body>
 <script language="javascript">
 
-    var pager = React.render(React.createElement(ViewPager,{ views : ["page1","page2","page3"], visible:"page1"}),
-            document.getElementById("viewpager-container"));
+    var pager = ViewPager.render({ views : ["page1","page2","page3"], visible:"page1"},"viewpager-container");
 
 
     pager.el('page2').innerHTML = "PAGE 2";
     pager.show('page2');
 
-    var pager2 = React.render(React.createElement(ViewPager,{ views : ["page11","page22","page33"], visible:"page11"}),
+    var pager2 = React.render(React.createElement(ViewPager.cls,{ views : ["page11","page22","page33"], visible:"page11"}),
             document.getElementById("viewpager-container2"));
 
 

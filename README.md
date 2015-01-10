@@ -5,8 +5,7 @@ A very simple View Pager written in React
 ## Usage
 
 ```javascript
-    var pager = React.render(React.createElement(ViewPager,{ views : ["page1","page2","page3"], visible:"page1"}),
-        document.getElementById("viewpager-container"));
+    var pager = ViewPager.render({ views : ["page1","page2","page3"], visible:"page1"},"viewpager-container");
 
     pager.el('page2').innerHTML = "PAGE 2"; //get the el
     pager.show('page2'); //show it
