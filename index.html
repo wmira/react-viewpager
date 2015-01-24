@@ -13,6 +13,10 @@
     <div id="viewpager-container2">
 
     </div>
+
+    <div id="viewpager-container3">
+
+    </div>
 </body>
 <script language="javascript">
 
@@ -29,6 +33,8 @@
     pager2.el('page22').innerHTML = "PAGE 22";
     pager2.show('page22');
 
+    
+    var pager3 = ViewPager.render({ views : [ {  ref: "page1", element: React.createElement("div",null,"Hey")} ], visible:"page1"},"viewpager-container3");
 
 </script>
 </html>

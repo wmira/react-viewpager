@@ -1,6 +1,6 @@
 {
   "name": "react-viewpager",
-  "version": "0.9.0",
+  "version": "0.10.0",
   "description": "View Pager",
   "main": "js/react-viewpager.js",
   "scripts": {
@@ -13,7 +13,7 @@
   "devDependencies": {
     "jsx-loader": "^0.12.2",
     "react": "^0.12.2",
-    "react-render-wrapper": "^0.9.0",
+    "react-render-wrapper": "^1.0.0",
     "webpack": "^1.4.15"
   },
   "repository": {

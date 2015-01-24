@@ -80,8 +80,23 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    render : function() {
 	        var divStyle = { display: this.state.visible ? "block" : "none" };
-	        return (React.createElement("div", {"data-vp-name": this.state.view.name, style: divStyle}, 
-	            React.createElement("div", {ref: "el"})
+	        
+	        var theElement =  null;
+	        if ( this.props.element ) {
+	            theElement = this.props.element;
+	        } else {
+	            theElement = React.createElement("div", {ref: "el"});
+	        }
+	        var name = null;
+	        if ( typeof this.props.view === 'string' ) {
+	            name = this.props.view;
+	        } else {
+	            name = this.props.ref;
+	            
+	        }
+	        
+	        return (React.createElement("div", {"data-vp-name": name, style: divStyle}, 
+	            theElement
 	        ))
 	    }
 
@@ -109,30 +124,70 @@ return /******/ (function(modules) { // webpackBootstrap
 	    render : function() {
 	        var views = this.state.views;
 	        var prefix = "vp-" + this.state.viewPrefix;
-	        return (React.createElement("div", {className: "vp-" + this.state.viewPrefix}, " ", 
+	        
+	        return (React.createElement("div", {className: prefix}, " ", 
 	                 views.map(function(view)  {
-	                    return React.createElement(View, {ref: view, key: view, view: view, visible: (this.state.visible === view) ? true : false})
+	                    if ( typeof view === 'string' ) {
+	                        return React.createElement(View, {ref: view, key: view, view: view, visible: ( this.state.visible === view) })
+	                    } else {
+	                        return React.createElement(View, {ref: view.ref, element: view.element, visible: ( this.state.visible === view.ref) });
+	                    }
 	                }.bind(this))
 	            
 	        ))
 	    },
 
 	    show : function(view) {
-	        this.setState({ visible: view })
+	        var visible = this.state.visible;
+	        if ( visible !== view ) {
+	            this.setState({visible: view});
+	            //FIXME: disable for now, rethink
+	            // this._dispatchEvents(view,visible);
+	        }
+	        
+	        
 	    },
+	/*,
 
-	    /**
-	     * Return the el node of this view
-	     *
-	     * @param view
-	     */
-	    el : function(view) {
-	        return this.refs[view].refs["el"].getDOMNode();
+	    _dispatchEvents = function(visible,hidden) {
+	        var capitalize = function(tocap) {
+	            return tocap[0].toUpperCase() + tocap.slice(1);
+	        }
+	        if ( this._receivers ) {
+	            this._receivers.forEach(function(receiver) {
+	                var funchidden = "on" + capitalize(hidden) + "Hidden";
+	                var funcshown = "on" + capitalize(visible) + "Shown";
+	                if ( receiver[funchidden] ) {
+	                    receiver[funchidden].call(receiver);
+	                }
+	                if ( receiver[funcshown] ) {
+	                    receiver[funcshown].call(receiver);
+
+	                }
+	            });
+	        }
 	    }
+	*/
+	    el : function(view) {
+	        var refViews = this.refs[view];
+	        if ( refViews.refs["el"] ) {
+	            return this.refs[view].refs["el"].getDOMNode()
+	        } 
+	        return null;
+	    }
+	    /*,
+	    
+	    dispatchEvents : function(receiver) {
+	        
+	        if ( !this._receivers ) {
+	            this._receivers = [];
+	        }
+	        this._receivers.push(receiver);
+	    },*/
 	});
 
 
-	module.exports = renderWrapper(ViewPager);
+	module.exports = renderWrapper(React,ViewPager);
 
 /***/ },
 /* 1 */
@@ -144,10 +199,8 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 2 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/*globals require,module */
+	/*globals require,module,React */
 	"use strict";
-
-	var React = __webpack_require__(1);
 
 	/**
 	 * React instance creation is a bit noisy. Use this on react a library such
@@ -167,12 +220,20 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * var renderWrapper = require("react-render");
 	 * var MyReactComponent = React.createClass... 
 	 * 
-	 * module.exports = renderWrapper(MyReactComponent)
+	 * module.exports = renderWrapper(React,MyReactComponent)
 	 *
 	 */
 
+	/**
+	 * 
+	 * Shortcut to React.createElement(cls,option) 
+	 *
+	 */
+	var elWrapper = function(React,ReactClass,option) {
+	    return React.createElement(ReactClass,option);
+	};
 	    
-	var render = function(ReactClass,options,el) {
+	var renderWrapper = function(React,ReactClass,options,el) {
 	    
 	    var ouroption = {};
 	    //if he passed an html element or a string on the first argument
@@ -188,21 +249,25 @@ return /******/ (function(modules) { // webpackBootstrap
 	        ourEl = ( typeof el === 'string') ? document.getElementById(el) : el;
 	    }
 
-	    return React.render(React.createElement(ReactClass,ouroption), ourEl);
+	    return React.render(elWrapper(React,ReactClass,ouroption), ourEl);
 	};
 
-	var RenderWrapper = function(ReactClass) {
+	var RenderWrapper = function(React,ReactClass) {
 
 	    return {
 	        cls : ReactClass,
+	        el : function(options) {
+	            return elWrapper(React,ReactClass,options);
+	        },
 	        render : function(options,el) {
-	            return render(ReactClass,options,el)
+	            return renderWrapper(React,ReactClass,options,el)
 	        }
 	    }
 
 	};
 
 	module.exports = RenderWrapper;
+
 
 /***/ }
 /******/ ])

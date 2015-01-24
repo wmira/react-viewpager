@@ -24,8 +24,23 @@ var View = React.createClass({
 
     render : function() {
         var divStyle = { display: this.state.visible ? "block" : "none" };
-        return (<div data-vp-name={this.state.view.name} style={divStyle}>
-            <div ref={"el"}></div>
+        
+        var theElement =  null;
+        if ( this.props.element ) {
+            theElement = this.props.element;
+        } else {
+            theElement = <div ref={"el"}></div>;
+        }
+        var name = null;
+        if ( typeof this.props.view === 'string' ) {
+            name = this.props.view;
+        } else {
+            name = this.props.ref;
+            
+        }
+        
+        return (<div data-vp-name={name} style={divStyle}>
+            {theElement}
         </div>)
     }
 
@@ -53,27 +68,67 @@ var ViewPager = React.createClass({
     render : function() {
         var views = this.state.views;
         var prefix = "vp-" + this.state.viewPrefix;
-        return (<div className={"vp-" + this.state.viewPrefix}> {
+        
+        return (<div className={prefix}> {
                  views.map(view => {
-                    return <View ref={view} key={view} view={view} visible={(this.state.visible === view) ? true : false}/>
+                    if ( typeof view === 'string' ) {
+                        return <View ref={view} key={view} view={view} visible={( this.state.visible === view ) }/>
+                    } else {
+                        return <View ref={view.ref} element={view.element} visible={( this.state.visible === view.ref ) } />;
+                    }
                 })
             }
         </div>)
     },
 
     show : function(view) {
-        this.setState({ visible: view })
+        var visible = this.state.visible;
+        if ( visible !== view ) {
+            this.setState({visible: view});
+            //FIXME: disable for now, rethink
+            // this._dispatchEvents(view,visible);
+        }
+        
+        
     },
+/*,
 
-    /**
-     * Return the el node of this view
-     *
-     * @param view
-     */
-    el : function(view) {
-        return this.refs[view].refs["el"].getDOMNode();
+    _dispatchEvents = function(visible,hidden) {
+        var capitalize = function(tocap) {
+            return tocap[0].toUpperCase() + tocap.slice(1);
+        }
+        if ( this._receivers ) {
+            this._receivers.forEach(function(receiver) {
+                var funchidden = "on" + capitalize(hidden) + "Hidden";
+                var funcshown = "on" + capitalize(visible) + "Shown";
+                if ( receiver[funchidden] ) {
+                    receiver[funchidden].call(receiver);
+                }
+                if ( receiver[funcshown] ) {
+                    receiver[funcshown].call(receiver);
+
+                }
+            });
+        }
     }
+*/
+    el : function(view) {
+        var refViews = this.refs[view];
+        if ( refViews.refs["el"] ) {
+            return this.refs[view].refs["el"].getDOMNode()
+        } 
+        return null;
+    }
+    /*,
+    
+    dispatchEvents : function(receiver) {
+        
+        if ( !this._receivers ) {
+            this._receivers = [];
+        }
+        this._receivers.push(receiver);
+    },*/
 });
 
 
-module.exports = renderWrapper(ViewPager);
+module.exports = renderWrapper(React,ViewPager);
